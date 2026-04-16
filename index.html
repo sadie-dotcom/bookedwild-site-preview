@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booked Wild — Direct Bookings Growth System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:   #1F3D2B;
+      --olive:   #4A5D45;
+      --sand:    #E6DED3;
+      --stone:   #F5F3EF;
+      --amber:   #C47A2C;
+      --amber-d: #a86520;
+      --charcoal:#2B2B2B;
+      --white:   #FAFAF8;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans:  'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      color: var(--charcoal);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── UTILITIES ── */
+    .label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: block;
+    }
+    .inner { max-width: 1120px; margin: 0 auto; }
+    .section { padding: 96px 48px; }
+
+    .btn-amber {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--amber);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 14px 28px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-amber:hover { background: var(--amber-d); transform: translateY(-1px); }
+
+    .link-arrow {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .link-arrow:hover { opacity: 1; }
+
+    /* ── DESIGN NOTE ── */
+    .design-note {
+      background: var(--amber);
+      color: var(--white);
+      text-align: center;
+      padding: 9px 24px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ──────────────────────────────────────────
+       NAV
+    ────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 62px;
+      transition: background 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(31,61,43,0.97);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      color: rgba(250,250,248,0.65);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links .nav-cta {
+      background: var(--amber);
+      color: var(--white) !important;
+      font-weight: 600 !important;
+      font-size: 12px !important;
+      padding: 8px 18px;
+      letter-spacing: 0.04em !important;
+      transition: background 0.2s !important;
+    }
+    .nav-links .nav-cta:hover { background: var(--amber-d) !important; }
+
+    /* ──────────────────────────────────────────
+       S1: HERO
+    ────────────────────────────────────────── */
+    .hero {
+      background: var(--green);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 48px 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle warm radial */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 5%;
+      right: 0;
+      width: 50%;
+      height: 75%;
+      background: radial-gradient(ellipse at 70% 40%, rgba(196,122,44,0.09) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(52px, 7vw, 92px);
+      font-weight: 400;
+      line-height: 1.04;
+      color: var(--white);
+      letter-spacing: -0.015em;
+      margin-bottom: 28px;
+    }
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(250,250,248,0.58);
+      max-width: 520px;
+      margin-bottom: 44px;
+    }
+
+    /* ──────────────────────────────────────────
+       S2: PROBLEM → SOLUTION (single section)
+    ────────────────────────────────────────── */
+    .problem-solution { padding: 0; }
+
+    /* Problem half — stone */
+    .problem-half {
+      background: var(--stone);
+      padding: 96px 48px 80px;
+    }
+    .problem-headline {
+      font-family: var(--serif);
+      font-size: clamp(30px, 3.2vw, 48px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--charcoal);
+      max-width: 660px;
+      margin-bottom: 48px;
+      letter-spacing: -0.01em;
+    }
+    .problem-three {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .problem-item {
+      background: var(--white);
+      padding: 32px 28px;
+      border-top: 2px solid var(--sand);
+      transition: border-color 0.2s;
+    }
+    .problem-item:hover { border-color: var(--amber); }
+    .problem-item-title {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 10px;
+    }
+    .problem-item-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(43,43,43,0.55);
+    }
+    .problem-item-icon {
+      margin-bottom: 18px;
+    }
+    .problem-item-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--amber);
+      fill: none;
+      stroke-width: 1.6;
+    }
+
+    /* Pivot line — amber bar */
+    .pivot {
+      background: var(--amber);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pivot-text {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--white);
+    }
+    .pivot-link {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(250,250,248,0.75);
+      border-bottom: 1px solid rgba(250,250,248,0.35);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .pivot-link:hover { color: var(--white); border-color: rgba(250,250,248,0.75); }
+
+    /* Solution half — green */
+    .solution-half {
+      background: var(--green);
+      padding: 80px 48px 96px;
+    }
+    .solution-three {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .solution-item {
+      padding: 0 48px 0 0;
+      margin-right: 0;
+      border-right: 1px solid rgba(250,250,248,0.08);
+    }
+    .solution-item:first-child { padding-left: 0; }
+    .solution-item:last-child { border-right: none; padding-right: 0; padding-left: 48px; }
+    .solution-item:nth-child(2) { padding-left: 48px; }
+    .solution-num {
+      font-family: var(--serif);
+      font-size: 44px;
+      font-weight: 400;
+      color: rgba(196,122,44,0.2);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .solution-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .solution-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(230,222,211,0.55);
+    }
+
+    /* ──────────────────────────────────────────
+       S3: THE SYSTEM
+    ────────────────────────────────────────── */
+    .system { background: var(--stone); }
+    .system-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+    .system-headline {
+      font-family: var(--serif);
+      font-size: clamp(28px, 2.8vw, 42px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--charcoal);
+      letter-spacing: -0.01em;
+    }
+    .system-sub {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(43,43,43,0.5);
+      max-width: 300px;
+      text-align: right;
+      line-height: 1.65;
+    }
+    .system-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+    .sys-pillar {
+      background: var(--white);
+      padding: 40px 36px 36px;
+    }
+    .sys-pillar-label { color: var(--amber); margin-bottom: 6px; opacity: 0.85; }
+    .sys-pillar-outcome {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.25;
+      margin-bottom: 24px;
+    }
+    .sys-rule {
+      width: 32px;
+      height: 1px;
+      background: var(--sand);
+      margin-bottom: 24px;
+    }
+    .sys-components { list-style: none; }
+    .sys-components li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(43,43,43,0.6);
+      line-height: 1.5;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(43,43,43,0.06);
+    }
+    .sys-components li:last-child { border-bottom: none; }
+    .sys-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--amber);
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+    .system-cta { margin-top: 44px; text-align: center; }
+
+    /* ──────────────────────────────────────────
+       S4: PROCESS
+    ────────────────────────────────────────── */
+    .process {
+      background: var(--green);
+      padding: 96px 48px;
+    }
+    .process-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 64px;
+    }
+    .process-headline {
+      font-family: var(--serif);
+      font-size: clamp(28px, 2.8vw, 42px);
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .process-sub {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.45);
+      max-width: 280px;
+      text-align: right;
+      line-height: 1.65;
+    }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid rgba(250,250,248,0.08);
+    }
+    .step {
+      padding: 40px 36px 40px 0;
+      border-right: 1px solid rgba(250,250,248,0.08);
+    }
+    .step:last-child { border-right: none; }
+    .step:not(:first-child) { padding-left: 36px; }
+    .step-n {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 400;
+      color: rgba(196,122,44,0.18);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .step-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(230,222,211,0.48);
+    }
+    .process-cta {
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(250,250,248,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .process-cta-note {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 15px;
+      color: rgba(230,222,211,0.35);
+    }
+
+    /* ──────────────────────────────────────────
+       S5: RESULTS
+    ────────────────────────────────────────── */
+    .results { background: var(--sand); }
+    .results-metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 64px;
+    }
+    .metric-block {
+      background: var(--white);
+      padding: 36px 32px;
+      border-top: 2px solid var(--sand);
+    }
+    .metric-value {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .metric-label {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(43,43,43,0.52);
+      line-height: 1.5;
+    }
+    .results-testimonial {
+      border-top: 1px solid rgba(43,43,43,0.1);
+      padding-top: 52px;
+      margin-bottom: 52px;
+    }
+    .quote-mark {
+      font-family: var(--serif);
+      font-size: 64px;
+      line-height: 0.5;
+      color: var(--amber);
+      opacity: 0.28;
+      margin-bottom: 22px;
+    }
+    .featured-quote {
+      font-family: var(--serif);
+      font-size: clamp(19px, 2.2vw, 28px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--charcoal);
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+    .quote-attr {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(43,43,43,0.35);
+    }
+    .results-secondary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      border-top: 1px solid rgba(43,43,43,0.1);
+      padding-top: 40px;
+    }
+    .small-quote {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--charcoal);
+      margin-bottom: 14px;
+    }
+
+    /* ──────────────────────────────────────────
+       S6: PACKAGES
+    ────────────────────────────────────────── */
+    .packages { background: var(--stone); }
+    .packages-header { margin-bottom: 48px; }
+    .packages-headline {
+      font-family: var(--serif);
+      font-size: clamp(28px, 2.8vw, 42px);
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .packages-sub {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(43,43,43,0.5);
+      max-width: 420px;
+      line-height: 1.65;
+    }
+    .packages-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+    .pkg {
+      background: var(--white);
+      padding: 48px 44px;
+    }
+    .pkg.featured { background: var(--green); }
+    .pkg-tier {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 10px;
+    }
+    .pkg-name {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .pkg.featured .pkg-name { color: var(--white); }
+    .pkg-desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(43,43,43,0.58);
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(43,43,43,0.08);
+      margin-bottom: 32px;
+    }
+    .pkg.featured .pkg-desc {
+      color: rgba(230,222,211,0.5);
+      border-color: rgba(250,250,248,0.1);
+    }
+    .pkg-list-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(43,43,43,0.35);
+      margin-bottom: 16px;
+    }
+    .pkg.featured .pkg-list-label { color: rgba(230,222,211,0.3); }
+    .pkg-list { list-style: none; margin-bottom: 36px; }
+    .pkg-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(43,43,43,0.65);
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(43,43,43,0.05);
+      line-height: 1.45;
+    }
+    .pkg-list li:last-child { border-bottom: none; }
+    .pkg.featured .pkg-list li { color: rgba(230,222,211,0.6); border-color: rgba(250,250,248,0.06); }
+    .pkg-check svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px; }
+    .pkg-for {
+      font-size: 12px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(43,43,43,0.4);
+      padding: 14px 16px;
+      background: var(--stone);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .pkg.featured .pkg-for {
+      background: rgba(250,250,248,0.05);
+      color: rgba(230,222,211,0.38);
+    }
+    .pkg-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--olive);
+      border-bottom: 1px solid rgba(74,93,69,0.3);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .pkg-link:hover { color: var(--green); border-color: var(--green); }
+
+    /* ──────────────────────────────────────────
+       S7: FINAL CTA
+    ────────────────────────────────────────── */
+    .final {
+      background: var(--charcoal);
+      padding: 128px 48px;
+      text-align: center;
+    }
+    .final-inner { max-width: 580px; margin: 0 auto; }
+    .final .label { color: rgba(230,222,211,0.22); margin-bottom: 28px; }
+    .final-headline {
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 66px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 22px;
+    }
+    .final-body {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.45);
+      line-height: 1.75;
+      margin-bottom: 40px;
+    }
+    .final-micro {
+      margin-top: 20px;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: rgba(230,222,211,0.2);
+    }
+
+    /* ──────────────────────────────────────────
+       FOOTER
+    ────────────────────────────────────────── */
+    footer {
+      background: var(--green);
+      padding: 68px 48px 40px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 52px;
+      padding-bottom: 52px;
+      border-bottom: 1px solid rgba(250,250,248,0.07);
+    }
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 24px;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .footer-tagline {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.35);
+      max-width: 200px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .footer-col-head {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(230,222,211,0.25);
+      margin-bottom: 16px;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li + li { margin-top: 9px; }
+    .footer-links a {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.45);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--sand); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+    }
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(230,222,211,0.2);
+    }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a {
+      font-size: 11px;
+      color: rgba(230,222,211,0.2);
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: rgba(230,222,211,0.5); }
+  </style>
+</head>
+<body>
+
+<div class="design-note">Booked Wild — Refined Homepage · v2 · April 2026 · Layout prototype</div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Booked Wild</a>
+  <ul class="nav-links">
+    <li><a href="#system">The System</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#contact" class="nav-cta">Book a Discovery Call</a></li>
+  </ul>
+</nav>
+
+<!-- ──────────────────────────────────────────
+     S1: HERO
+────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-headline">
+      Stop paying commission.<br>
+      Start owning<br>your bookings.
+    </h1>
+    <p class="hero-sub">
+      Booked Wild builds the direct booking systems that help travel and experience businesses increase revenue, reduce OTA reliance and take back control of their growth.
+    </p>
+    <a href="#contact" class="btn-amber">Book a Discovery Call →</a>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     S2: PROBLEM → SOLUTION
+────────────────────────────────────────── -->
+<section class="problem-solution">
+
+  <!-- Problem -->
+  <div class="problem-half">
+    <div class="inner">
+      <h2 class="problem-headline">Most travel businesses are building revenue for someone else's platform.</h2>
+      <div class="problem-three">
+        <div class="problem-item">
+          <div class="problem-item-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3 class="problem-item-title">Lost margin</h3>
+          <p class="problem-item-desc">15–30% commission on every booking, every month. Revenue leaving the business before you can reinvest it.</p>
+        </div>
+        <div class="problem-item">
+          <div class="problem-item-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><line x1="18" y1="2" x2="22" y2="6"/><line x1="22" y1="2" x2="18" y2="6"/></svg>
+          </div>
+          <h3 class="problem-item-title">No customer ownership</h3>
+          <p class="problem-item-desc">The platform holds the relationship. You do the work. Past guests are unreachable. Repeat bookings go back through the OTA.</p>
+        </div>
+        <div class="problem-item">
+          <div class="problem-item-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 class="problem-item-title">Unpredictable growth</h3>
+          <p class="problem-item-desc">Visibility tied to rankings you don't control. An algorithm change — or a new competitor — and your bookings drop overnight.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pivot -->
+  <div class="pivot">
+    <p class="pivot-text">There's a direct alternative.</p>
+    <a href="#system" class="pivot-link">See the system →</a>
+  </div>
+
+  <!-- Solution -->
+  <div class="solution-half">
+    <div class="inner">
+      <div class="solution-three">
+        <div class="solution-item">
+          <div class="solution-num">01</div>
+          <h3 class="solution-title">Systems, not services</h3>
+          <p class="solution-desc">One integrated growth engine — not a set of disconnected retainers. Every component is built to feed the next.</p>
+        </div>
+        <div class="solution-item">
+          <div class="solution-num">02</div>
+          <h3 class="solution-title">Travel-sector specific</h3>
+          <p class="solution-desc">We understand bookings, seasonality and OTA dynamics in ways a generalist agency never will. Built for this industry.</p>
+        </div>
+        <div class="solution-item">
+          <div class="solution-num">03</div>
+          <h3 class="solution-title">You own everything</h3>
+          <p class="solution-desc">The systems, the data, the customer relationships. Nothing locked to us. You build equity in your own growth infrastructure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ──────────────────────────────────────────
+     S3: THE SYSTEM
+────────────────────────────────────────── -->
+<section class="section system" id="system">
+  <div class="inner">
+    <div class="system-header">
+      <div>
+        <span class="label" style="color: var(--olive); opacity: 0.65; margin-bottom: 12px;">What's included</span>
+        <h2 class="system-headline">The Direct Bookings<br>Growth System.</h2>
+      </div>
+      <p class="system-sub">Seven components. Three outcomes. One connected system designed to move bookings to you — and keep them there.</p>
+    </div>
+    <div class="system-pillars">
+
+      <div class="sys-pillar">
+        <span class="label sys-pillar-label">Get Found</span>
+        <h3 class="sys-pillar-outcome">More qualified visitors — without paying a platform to find them.</h3>
+        <div class="sys-rule"></div>
+        <ul class="sys-components">
+          <li><span class="sys-dot"></span>SEO — owned search visibility that compounds over time</li>
+          <li><span class="sys-dot"></span>AEO — presence in AI-driven tools (ChatGPT, Google AI, Perplexity)</li>
+          <li><span class="sys-dot"></span>Paid Advertising — Google &amp; Meta, managed to drive direct traffic</li>
+        </ul>
+      </div>
+
+      <div class="sys-pillar">
+        <span class="label sys-pillar-label">Convert &amp; Book</span>
+        <h3 class="sys-pillar-outcome">Turn visitors into direct bookings — not referrals to a third-party platform.</h3>
+        <div class="sys-rule"></div>
+        <ul class="sys-components">
+          <li><span class="sys-dot"></span>High-converting website design and optimisation</li>
+          <li><span class="sys-dot"></span>Booking system setup — accept and manage direct bookings without OTA dependency</li>
+        </ul>
+      </div>
+
+      <div class="sys-pillar">
+        <span class="label sys-pillar-label">Retain &amp; Grow</span>
+        <h3 class="sys-pillar-outcome">Build the customer relationships OTAs prevent you from having.</h3>
+        <div class="sys-rule"></div>
+        <ul class="sys-components">
+          <li><span class="sys-dot"></span>CRM &amp; automation — capture, nurture and re-engage customers directly</li>
+          <li><span class="sys-dot"></span>Content &amp; growth strategy — the connective layer that builds long-term authority</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="system-cta">
+      <a href="#contact" class="btn-amber">Talk to us about your business →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     S4: PROCESS
+────────────────────────────────────────── -->
+<section class="process" id="process">
+  <div class="inner">
+    <div class="process-header">
+      <div>
+        <span class="label" style="color: rgba(230,222,211,0.35); margin-bottom: 14px;">How it works</span>
+        <h2 class="process-headline">Simple to start.<br>Managed from there.</h2>
+      </div>
+      <p class="process-sub">Four steps from first conversation to a live, growing direct booking system.</p>
+    </div>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <h3 class="step-title">Discovery call</h3>
+        <p class="step-desc">An honest conversation about your business, your current setup and what you want to change. No pitch.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <h3 class="step-title">Strategy &amp; proposal</h3>
+        <p class="step-desc">We map the right system for your business — components, timeline, expected outcomes — before any commitment.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <h3 class="step-title">Build &amp; launch</h3>
+        <p class="step-desc">We implement everything. No technical lift on your side. You focus on running your business.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <h3 class="step-title">Ongoing management</h3>
+        <p class="step-desc">We manage, optimise and report. Your direct bookings grow. Your OTA dependency shrinks.</p>
+      </div>
+    </div>
+    <div class="process-cta">
+      <p class="process-cta-note">Most clients are live within 6–8 weeks of onboarding.</p>
+      <a href="#contact" class="btn-amber">Start with a discovery call →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     S5: RESULTS
+────────────────────────────────────────── -->
+<section class="section results" id="results">
+  <div class="inner">
+
+    <!-- Outcome metrics — placeholders for real data -->
+    <div class="results-metric-row">
+      <div class="metric-block">
+        <p class="metric-value">[X]%</p>
+        <p class="metric-label">Average increase in direct bookings<br>in the first 12 months</p>
+      </div>
+      <div class="metric-block">
+        <p class="metric-value">[X]%</p>
+        <p class="metric-label">Average reduction in OTA commission<br>costs within 6 months</p>
+      </div>
+      <div class="metric-block">
+        <p class="metric-value">[X]wk</p>
+        <p class="metric-label">Typical time from onboarding<br>to a live, active system</p>
+      </div>
+    </div>
+
+    <!-- Featured testimonial -->
+    <div class="results-testimonial">
+      <div class="quote-mark">"</div>
+      <p class="featured-quote">
+        [Client quote describing a specific, measurable outcome — reduced commission costs, increased direct enquiries, margin improvement. Two to three sentences. Attributed to a named person and business.]
+      </p>
+      <p class="quote-attr">— [Name · Business · Location · Year]</p>
+    </div>
+
+    <!-- Secondary testimonials -->
+    <div class="results-secondary">
+      <div>
+        <p class="small-quote">"[Second quote — specific outcome, honest, grounded in what actually changed.]"</p>
+        <p class="quote-attr" style="font-size: 11px; color: rgba(43,43,43,0.35);">— [Name · Business · Year]</p>
+      </div>
+      <div>
+        <p class="small-quote">"[Third quote — what improved, what they'd tell another operator considering this.]"</p>
+        <p class="quote-attr" style="font-size: 11px; color: rgba(43,43,43,0.35);">— [Name · Business · Year]</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     S6: PACKAGES
+────────────────────────────────────────── -->
+<section class="section packages" id="packages">
+  <div class="inner">
+    <div class="packages-header">
+      <span class="label" style="color: var(--olive); opacity: 0.65; margin-bottom: 14px;">How we work together</span>
+      <h2 class="packages-headline">Two ways to work with Booked Wild.</h2>
+      <p class="packages-sub">Choose the level of involvement that fits your business — you can move between them as you grow.</p>
+    </div>
+    <div class="packages-grid">
+
+      <!-- PART MANAGED -->
+      <div class="pkg">
+        <p class="pkg-tier">Part Managed</p>
+        <h3 class="pkg-name">The right systems.<br>Your team executes.</h3>
+        <p class="pkg-desc">We build the infrastructure and provide strategic oversight. Your team handles day-to-day execution with our guidance.</p>
+        <p class="pkg-list-label">What's included</p>
+        <ul class="pkg-list">
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Website, booking system &amp; CRM setup
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            SEO foundations and AEO setup
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Content and growth strategy
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Monthly strategic review and reporting
+          </li>
+        </ul>
+        <p class="pkg-for">For businesses with internal capacity who want the right framework and direction.</p>
+        <a href="#contact" class="pkg-link">Find out more →</a>
+      </div>
+
+      <!-- FULLY MANAGED -->
+      <div class="pkg featured">
+        <p class="pkg-tier">Fully Managed</p>
+        <h3 class="pkg-name">Everything handled.<br>End to end.</h3>
+        <p class="pkg-desc">We run the complete system. Implementation, management, optimisation. No internal lift required — just results.</p>
+        <p class="pkg-list-label">What's included</p>
+        <ul class="pkg-list">
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Everything in Part Managed
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Paid advertising — Google &amp; Meta, fully managed
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Ongoing content production
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            CRM and automation management
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Full performance tracking and reporting
+          </li>
+          <li>
+            <span class="pkg-check"><svg viewBox="0 0 14 14" fill="none" stroke="#C47A2C" stroke-width="1.8"><polyline points="1.5,7 5,10.5 12.5,3"/></svg></span>
+            Priority support
+          </li>
+        </ul>
+        <p class="pkg-for">For businesses ready to invest in a complete growth system and want everything handled.</p>
+        <a href="#contact" class="btn-amber">Book a discovery call →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     S7: FINAL CTA
+────────────────────────────────────────── -->
+<section class="final" id="contact">
+  <div class="final-inner">
+    <span class="label" style="color: rgba(230,222,211,0.22); margin-bottom: 28px;">Get started</span>
+    <h2 class="final-headline">Ready to own your bookings?</h2>
+    <p class="final-body">Tell us about your business. We'll tell you what's possible — and whether we're the right fit to help you get there.</p>
+    <a href="#" class="btn-amber">Book a Discovery Call →</a>
+    <p class="final-micro">We reply within one business day.</p>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     FOOTER
+────────────────────────────────────────── -->
+<footer>
+  <div class="inner">
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand">Booked Wild</p>
+        <p class="footer-tagline">The direct bookings growth system for travel and experience businesses.</p>
+        <a href="#contact" class="btn-amber" style="font-size: 12px; padding: 10px 18px;">Book a Discovery Call →</a>
+      </div>
+      <div>
+        <p class="footer-col-head">Services</p>
+        <ul class="footer-links">
+          <li><a href="#">SEO &amp; AEO</a></li>
+          <li><a href="#">Paid Advertising</a></li>
+          <li><a href="#">Website &amp; Conversion</a></li>
+          <li><a href="#">Booking Systems</a></li>
+          <li><a href="#">CRM &amp; Automation</a></li>
+          <li><a href="#">Growth Strategy</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Company</p>
+        <ul class="footer-links">
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Packages</a></li>
+          <li><a href="#">Results</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Contact</p>
+        <ul class="footer-links">
+          <li><a href="#">Book a Discovery Call</a></li>
+          <li><a href="#">hello@bookedwild.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© Booked Wild 2026 · All rights reserved</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+</script>
+</body>
+</html>
