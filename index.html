@@ -1106,6 +1106,351 @@
       </div>
     </div>
   </div>
+<!-- ──────────────────────────────────────────
+     CALCULATOR: DIRECT BOOKING OPPORTUNITY
+     Paste this section anywhere in index.html
+     (recommended: after S2 Problem/Solution
+      or before S5 Results).
+     Uses existing CSS variables — no design
+     system changes required.
+────────────────────────────────────────── -->
+<section class="section calculator" id="calculator">
+  <style>
+    .calculator { background: var(--stone); }
+ 
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      background: rgba(43,43,43,0.06);
+    }
+    .calc-panel {
+      background: var(--white);
+      padding: 56px 52px;
+    }
+    .calc-panel.result {
+      background: var(--green);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .calc-panel.result::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 70%;
+      height: 80%;
+      background: radial-gradient(ellipse at 70% 40%, rgba(196,122,44,0.10) 0%, transparent 65%);
+      pointer-events: none;
+    }
+ 
+    /* Header */
+    .calc-header { margin-bottom: 40px; }
+    .calc-headline {
+      font-family: var(--serif);
+      font-size: clamp(26px, 2.6vw, 38px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--charcoal);
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+    .calc-sub {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(43,43,43,0.55);
+      line-height: 1.65;
+      max-width: 440px;
+    }
+ 
+    /* Fields */
+    .calc-field { margin-bottom: 28px; }
+    .calc-field:last-of-type { margin-bottom: 36px; }
+    .calc-flabel {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--olive);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .calc-input,
+    .calc-select {
+      width: 100%;
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--charcoal);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(43,43,43,0.18);
+      padding: 10px 0;
+      transition: border-color 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0;
+    }
+    .calc-input::placeholder { color: rgba(43,43,43,0.3); }
+    .calc-input:focus,
+    .calc-select:focus { border-bottom-color: var(--amber); }
+    .calc-select {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23C47A2C' stroke-width='1.5'%3E%3Cpolyline points='1,1.5 6,6.5 11,1.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right center;
+      background-size: 10px;
+      cursor: pointer;
+    }
+ 
+    /* Slider */
+    .calc-slider-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .calc-slider-value {
+      font-family: var(--serif);
+      font-size: 26px;
+      color: var(--amber);
+      font-weight: 400;
+      line-height: 1;
+    }
+    .calc-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 2px;
+      background: rgba(43,43,43,0.15);
+      outline: none;
+      margin: 8px 0 0;
+    }
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--amber);
+      cursor: pointer;
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 1px var(--amber);
+      transition: transform 0.15s;
+    }
+    .calc-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    .calc-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--amber);
+      cursor: pointer;
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 1px var(--amber);
+    }
+ 
+    /* Calculate button — uses existing .btn-amber */
+    .calc-btn-calc { border: none; cursor: pointer; }
+ 
+    /* Result panel */
+    .calc-result-inner { position: relative; z-index: 1; }
+    .calc-result-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(230,222,211,0.45);
+      display: block;
+      margin-bottom: 22px;
+    }
+    .calc-placeholder {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 19px;
+      color: rgba(230,222,211,0.38);
+      line-height: 1.55;
+      max-width: 340px;
+    }
+    .calc-result-headline {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(20px, 2vw, 26px);
+      font-weight: 400;
+      color: rgba(250,250,248,0.8);
+      line-height: 1.35;
+      margin-bottom: 26px;
+    }
+    .calc-result-values {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .calc-result-amount {
+      font-family: var(--serif);
+      font-size: clamp(46px, 5.5vw, 72px);
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .calc-result-per {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.55);
+      letter-spacing: 0.03em;
+    }
+    .calc-result-range {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.5);
+      line-height: 1.7;
+    }
+    .calc-result-range strong {
+      color: var(--sand);
+      font-weight: 500;
+    }
+    .calc-result-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(250,250,248,0.18);
+      margin: 28px 0 22px;
+    }
+    .calc-result-foot {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(230,222,211,0.5);
+      line-height: 1.65;
+      max-width: 340px;
+      margin-bottom: 28px;
+    }
+    .calc-result-cta { position: relative; z-index: 1; }
+ 
+    /* Responsive */
+    @media (max-width: 860px) {
+      .calc-grid { grid-template-columns: 1fr; }
+      .calc-panel { padding: 44px 32px; }
+    }
+  </style>
+ 
+  <div class="inner">
+    <div class="calc-grid">
+ 
+      <!-- ─── Inputs ─── -->
+      <div class="calc-panel">
+        <div class="calc-header">
+          <span class="label" style="color: var(--olive); opacity: 0.65; margin-bottom: 14px;">Direct booking opportunity</span>
+          <h2 class="calc-headline">See what OTA commission<br>is really costing you.</h2>
+          <p class="calc-sub">A quick estimate of the revenue leaving your business every year — and what could come back with a direct booking system in place.</p>
+        </div>
+ 
+        <div class="calc-field">
+          <label class="calc-flabel" for="calc-business">Business type</label>
+          <select id="calc-business" class="calc-select">
+            <option value="450">Accommodation (hotel, B&amp;B, guesthouse)</option>
+            <option value="750">Short-term rental / holiday let</option>
+            <option value="150">Tour or experience operator</option>
+            <option value="85">Restaurant / dining</option>
+            <option value="110">Activity / adventure provider</option>
+            <option value="250">Other travel &amp; hospitality</option>
+          </select>
+        </div>
+ 
+        <div class="calc-field">
+          <label class="calc-flabel" for="calc-bookings">Monthly bookings</label>
+          <input type="number" id="calc-bookings" class="calc-input" placeholder="e.g. 120" min="0" inputmode="numeric" />
+        </div>
+ 
+        <div class="calc-field">
+          <div class="calc-slider-row">
+            <label class="calc-flabel" for="calc-ota" style="margin-bottom: 0;">% from OTAs</label>
+            <span class="calc-slider-value" id="calc-ota-value">50%</span>
+          </div>
+          <input type="range" id="calc-ota" class="calc-slider" min="0" max="100" value="50" step="1" />
+        </div>
+ 
+        <button type="button" id="calc-btn" class="btn-amber calc-btn-calc">Calculate opportunity →</button>
+      </div>
+ 
+      <!-- ─── Result ─── -->
+      <div class="calc-panel result">
+        <div class="calc-result-inner">
+          <span class="calc-result-label">Estimated annual commission</span>
+ 
+          <div id="calc-default">
+            <p class="calc-placeholder">Enter your numbers and we'll show the revenue currently leaving your business through OTA commissions.</p>
+          </div>
+ 
+          <div id="calc-output" style="display: none;">
+            <p class="calc-result-headline">You're likely losing around</p>
+            <div class="calc-result-values">
+              <span class="calc-result-amount" id="calc-mid">£0</span>
+              <span class="calc-result-per">per year</span>
+            </div>
+            <p class="calc-result-range">
+              Estimated range: <strong id="calc-low">£0</strong> – <strong id="calc-high">£0</strong>
+              based on typical OTA commission of 15–25%.
+            </p>
+            <div class="calc-result-divider"></div>
+            <p class="calc-result-foot">A meaningful share of that revenue can be recovered with the right direct booking system in place.</p>
+          </div>
+        </div>
+ 
+        <div class="calc-result-cta">
+          <a href="#contact" class="btn-amber">Book a discovery call →</a>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+ 
+  <script>
+    (function() {
+      const businessSelect = document.getElementById('calc-business');
+      const bookingsInput  = document.getElementById('calc-bookings');
+      const otaSlider      = document.getElementById('calc-ota');
+      const otaValue       = document.getElementById('calc-ota-value');
+      const calcBtn        = document.getElementById('calc-btn');
+      const defaultBlock   = document.getElementById('calc-default');
+      const outputBlock    = document.getElementById('calc-output');
+      const lowEl          = document.getElementById('calc-low');
+      const midEl          = document.getElementById('calc-mid');
+      const highEl         = document.getElementById('calc-high');
+ 
+      // Live slider label
+      otaSlider.addEventListener('input', () => {
+        otaValue.textContent = otaSlider.value + '%';
+      });
+ 
+      const fmt = (n) => '£' + Math.round(n).toLocaleString('en-GB');
+ 
+      calcBtn.addEventListener('click', () => {
+        const avgValue = parseFloat(businessSelect.value) || 0;   // avg £ per booking
+        const bookings = parseFloat(bookingsInput.value) || 0;    // bookings per month
+        const otaPct   = parseFloat(otaSlider.value) / 100;       // share from OTAs
+ 
+        // Annual revenue that flows via OTAs
+        const otaRevenueAnnual = avgValue * bookings * otaPct * 12;
+ 
+        // Commission range 15% – 25% (mid = 20%)
+        const low  = otaRevenueAnnual * 0.15;
+        const mid  = otaRevenueAnnual * 0.20;
+        const high = otaRevenueAnnual * 0.25;
+ 
+        lowEl.textContent  = fmt(low);
+        midEl.textContent  = fmt(mid);
+        highEl.textContent = fmt(high);
+ 
+        defaultBlock.style.display = 'none';
+        outputBlock.style.display  = 'block';
+      });
+    })();
+  </script>
+</section>
 </footer>
 
 <script>
